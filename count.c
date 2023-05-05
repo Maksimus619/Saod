@@ -33,9 +33,11 @@ int main()
 
 	max++;
 	int mass1[max];
-        for(int i = 0; i < max; i++)
+        for(int i = 0, j = 0; i < max; i++)
         {
-                mass1[i] = 0;
+		while (mass1[i]--){
+		mass[j++] = i;
+		}
         }
 
         for(int i = 0; i < x; i++)
