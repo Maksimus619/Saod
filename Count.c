@@ -50,9 +50,9 @@ int main() {
     double n = wtime(); 
     
     int mass[x], max = 0, min = 0, max1 = 100000; 
-    for(int i = 0; i < x; i++) { 
+    for(int i = 0; i < x; i++) { //заполняем случайными числами
         mass[i] = getrand(min, max1); 
-        if (max < mass[i]) {
+        if (max < mass[i]) { //проверят является ли текущее значение больше текущего максимального
             max = mass[i];
         } 
     }
