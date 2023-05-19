@@ -13,8 +13,8 @@ int getrand(int min, int max) {
 }
 
 void counting_sort(int array[], int size, int max_value) {
-    int counts[max_value + 1];
-    int sorted[size];
+    int counts[max_value + 1]; // массив использующийся для подсчта колличества каждого значения в массиве array
+    int sorted[size]; // массив хранящий остортированные значения
     
     // Инициализируем массив counts нулями
     for (int i = 0; i <= max_value; i++) {
