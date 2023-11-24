@@ -129,7 +129,7 @@ int main() {
     printf("\n");
 
     // Добавление
-    root = insert(root, 7);
+    root = insert(root, 115);
 
     // Удаление
     root = deleteNode(root, 7);
