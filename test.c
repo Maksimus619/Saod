@@ -118,15 +118,18 @@ void inOrder(Node* root) {
 
 void printTree(Node* root, int space) {
     if (root) {
-        space += 5;
+        const int increment = 4;
+        space += increment;
 
         printTree(root->right, space);
 
         printf("\n");
-        for (int i = 5; i < space; i++) {
+        for (int i = increment; i < space; i++) {
             printf(" ");
         }
-        printf("%d\n", root->data);
+
+        // Вывод графического символа для узла
+        printf("┌───%d\n", root->data);
 
         printTree(root->left, space);
     }
