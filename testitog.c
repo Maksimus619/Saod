@@ -205,8 +205,14 @@ int main() {
         printf("Element not found.\n");
     }
 
-    // Поиск определенного значения
-    int search_value = 42; // Замени это значение на то, которое ты хочешь найти в дереве
+    printf("In-order traversal after operations: ");
+    inOrder(root);
+    printf("\n");
+
+    printf("Number of nodes in the tree after operations: %d\n", countNodes(root));
+
+	//поиск определенного значения
+	int search_value = 97;
     SearchResult search_result = search(root, search_value, 1);
 
     if (search_result.node) {
@@ -214,12 +220,6 @@ int main() {
     } else {
         printf("Element with value %d not found in the tree.\n", search_value);
     }
-
-    printf("In-order traversal after operations: ");
-    inOrder(root);
-    printf("\n");
-
-    printf("Number of nodes in the tree after operations: %d\n", countNodes(root));
 
     // Засекаем время после выполнения операций
     clock_t end_time = clock();
