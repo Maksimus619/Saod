@@ -10,6 +10,11 @@ struct Node {
 
 typedef struct Node Node;
 
+typedef struct {
+    Node* node;
+    int level;
+} SearchResult;
+
 Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
@@ -61,15 +66,23 @@ Node* findMin(Node* node) {
     return node;
 }
 
-Node* search(Node* root, int data) {
-    if (!root || root->data == data) {
-        return root;
+SearchResult search(Node* root, int data, int currentLevel) {
+    SearchResult result;
+    result.node = NULL;
+    result.level = 0;
+
+    if (!root) {
+        return result;
     }
 
     if (data < root->data) {
-        return search(root->left, data);
+        return search(root->left, data, currentLevel + 1);
+    } else if (data > root->data) {
+        return search(root->right, data, currentLevel + 1);
     } else {
-        return search(root->right, data);
+        result.node = root;
+        result.level = currentLevel;
+        return result;
     }
 }
 
@@ -152,10 +165,10 @@ int main() {
 
     // Поиск
     int searchValue = 20;
-    Node* foundNode = search(root, searchValue);
+    SearchResult result = search(root, searchValue, 1);
 
-    if (foundNode) {
-        printf("Node with value %d found in the tree. Data: %d\n", searchValue, foundNode->data);
+    if (result.node) {
+        printf("Node with value %d found at level %d. Data: %d\n", searchValue, result.level, result.node->data);
     } else {
         printf("Node with value %d not found in the tree.\n", searchValue);
     }
