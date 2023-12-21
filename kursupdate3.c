@@ -61,6 +61,18 @@ Node* findMin(Node* node) {
     return node;
 }
 
+Node* search(Node* root, int data) {
+    if (!root || root->data == data) {
+        return root;
+    }
+
+    if (data < root->data) {
+        return search(root->left, data);
+    } else {
+        return search(root->right, data);
+    }
+}
+
 Node* deleteNode(Node* root, int data) {
     if (!root) {
         return root;
@@ -108,18 +120,6 @@ Node* insert(Node* root, int data) {
     return root;
 }
 
-Node* search(Node* root, int data) {
-    if (!root || root->data == data) {
-        return root;
-    }
-
-    if (data < root->data) {
-        return search(root->left, data);
-    } else {
-        return search(root->right, data);
-    }
-}
-
 void inOrder(Node* root) {
     if (root) {
         inOrder(root->left);
@@ -151,13 +151,13 @@ int main() {
     printf("\n");
 
     // Поиск
-    int searchData = 30;
-    Node* result = search(root, searchData);
+    int searchValue = 20;
+    Node* foundNode = search(root, searchValue);
 
-    if (result) {
-        printf("%d found in the AA tree!\n", searchData);
+    if (foundNode) {
+        printf("Node with value %d found in the tree.\n", searchValue);
     } else {
-        printf("%d not found in the AA tree.\n", searchData);
+        printf("Node with value %d not found in the tree.\n", searchValue);
     }
 
     return 0;
