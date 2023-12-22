@@ -1,59 +1,47 @@
-**Удаление узла из АА-дерева:**
+**Поиск узла в АА-дереве:**
 
-1. **Операция удаления (`deleteNode`):**
-   - Если дерево пусто, возвращается NULL.
-   - Рекурсивный поиск узла с заданным значением для удаления.
-   - Если узел найден:
-     - Если у узла нет левого или правого поддерева, узел удаляется.
-     - Если у узла есть оба поддерева, он заменяется минимальным узлом из правого поддерева, и затем минимальный узел удаляется из правого поддерева.
-   - Выполняются операции skew и split для поддержания баланса.
+1. **Операция поиска (`search`):**
+   - Рекурсивно выполняется поиск заданного значения (data) в АА-дереве, начиная с корневого узла.
+   - По мере спуска по дереву, сравнивается искомое значение с ключами текущих узлов.
+   - Если значение меньше текущего узла, поиск продолжается в левом поддереве; если больше - в правом.
+   - Если значение найдено, возвращается структура `SearchResult` с указателем на найденный узел и уровнем его расположения.
 
 ```c
-Node* deleteNode(Node* root, int data) {
+SearchResult search(Node* root, int data, int currentLevel) {
+    SearchResult result;
+    result.node = NULL;
+    result.level = 0;
+
     if (!root) {
-        return root;
+        return result;
     }
 
     if (data < root->data) {
-        root->left = deleteNode(root->left, data);
+        return search(root->left, data, currentLevel + 1);
     } else if (data > root->data) {
-        root->right = deleteNode(root->right, data);
+        return search(root->right, data, currentLevel + 1);
     } else {
-        // Узел для удаления найден
-        if (!root->left || !root->right) {
-            // Узел имеет одно или ни одного поддерева
-            Node* temp = root->left ? root->left : root->right;
-            if (!temp) {
-                temp = root;
-                root = NULL;
-            } else {
-                *root = *temp;
-            }
-            free(temp);
-        } else {
-            // Узел имеет оба поддерева
-            Node* temp = findMin(root->right);
-            root->data = temp->data;
-            root->right = deleteNode(root->right, temp->data);
-        }
+        result.node = root;
+        result.level = currentLevel;
+        return result;
     }
-
-    root = skew(root);
-    root = split(root);
-    return root;
 }
 ```
 
-2. **Поиск минимального узла (`findMin`):**
-   - Находит узел с минимальным значением в поддереве, начиная с заданного узла.
+2. **Вызов операции поиска:**
+   - В функции `main` производится вызов операции поиска для определенного значения (`search_value`).
+   - В результате поиска выводится информация о наличии или отсутствии элемента в дереве и уровне его расположения.
 
 ```c
-Node* findMin(Node* node) {
-    while (node->left) {
-        node = node->left;
-    }
-    return node;
+//поиск определенного значения
+int search_value = 97;
+SearchResult search_result = search(root, search_value, 1);
+
+if (search_result.node) {
+    printf("Element with value %d found at level %d.\n", search_value, search_result.level);
+} else {
+    printf("Element with value %d not found in the tree.\n", search_value);
 }
 ```
 
-Эти операции обеспечивают корректное удаление узла из АА-дерева и последующую балансировку для поддержания структуры дерева.
+Эти операции обеспечивают эффективный поиск заданного значения в АА-дереве и предоставляют информацию о его расположении в структуре данных.
