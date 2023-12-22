@@ -1,35 +1,41 @@
-**Добавление узла в АА-дерево:**
+**Удаление узла из АА-дерева:**
 
-1. **Инициализация нового узла:**
-   - Создается новый узел с заданным значением данных (data), уровнем 1 (level), и без левого и правого потомка.
-   - Уровень устанавливается в 1, так как новый узел вставляется на самом нижнем уровне.
-
-```c
-Node* createNode(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->level = 1;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
-}
-```
-
-2. **Операция вставки (`insert`):**
-   - Если дерево пусто, созданный узел становится корневым узлом.
-   - Иначе, осуществляется рекурсивный поиск подходящего места для вставки узла, с учетом бинарного порядка.
-   - После вставки выполняются операции skew и split для поддержания баланса.
+1. **Операция удаления (`deleteNode`):**
+   - Если дерево пусто, возвращается NULL.
+   - Рекурсивный поиск узла с заданным значением для удаления.
+   - Если узел найден:
+     - Если у узла нет левого или правого поддерева, узел удаляется.
+     - Если у узла есть оба поддерева, он заменяется минимальным узлом из правого поддерева, и затем минимальный узел удаляется из правого поддерева.
+   - Выполняются операции skew и split для поддержания баланса.
 
 ```c
-Node* insert(Node* root, int data) {
+Node* deleteNode(Node* root, int data) {
     if (!root) {
-        return createNode(data);
+        return root;
     }
 
     if (data < root->data) {
-        root->left = insert(root->left, data);
+        root->left = deleteNode(root->left, data);
     } else if (data > root->data) {
-        root->right = insert(root->right, data);
+        root->right = deleteNode(root->right, data);
+    } else {
+        // Узел для удаления найден
+        if (!root->left || !root->right) {
+            // Узел имеет одно или ни одного поддерева
+            Node* temp = root->left ? root->left : root->right;
+            if (!temp) {
+                temp = root;
+                root = NULL;
+            } else {
+                *root = *temp;
+            }
+            free(temp);
+        } else {
+            // Узел имеет оба поддерева
+            Node* temp = findMin(root->right);
+            root->data = temp->data;
+            root->right = deleteNode(root->right, temp->data);
+        }
     }
 
     root = skew(root);
@@ -38,28 +44,16 @@ Node* insert(Node* root, int data) {
 }
 ```
 
-3. **Операция skew (`skew`):**
-   - Проверяет, если у текущего узла (root) и его левого потомка (root->left) одинаковый уровень, выполняет правый поворот для поддержания баланса.
+2. **Поиск минимального узла (`findMin`):**
+   - Находит узел с минимальным значением в поддереве, начиная с заданного узла.
 
 ```c
-Node* skew(Node* root) {
-    if (root && root->left && root->level == root->left->level) {
-        root = rotateRight(root);
+Node* findMin(Node* node) {
+    while (node->left) {
+        node = node->left;
     }
-    return root;
+    return node;
 }
 ```
 
-4. **Операция split (`split`):**
-   - Проверяет, если у текущего узла (root) и его правого потомка (root->right) и правого потомка правого потомка (root->right->right) одинаковый уровень, выполняет левый поворот и увеличивает уровень правого потомка для поддержания баланса.
-
-```c
-Node* split(Node* root) {
-    if (root && root->right && root->right->right && root->right->right->level == root->level) {
-        root = rotateLeft(root);
-    }
-    return root;
-}
-```
-
-Эти операции обеспечивают добавление нового узла в АА-дерево с последующей балансировкой для поддержания его структуры.
+Эти операции обеспечивают корректное удаление узла из АА-дерева и последующую балансировку для поддержания структуры дерева.
