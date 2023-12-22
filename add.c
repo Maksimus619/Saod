@@ -1,76 +1,16 @@
-int main() {
-    Node* root = NULL;
-    int values_count = 100000;
+Для расчета сложности программы, можно воспользоваться методом анализа времени выполнения алгоритма. Предположим, что сложность вашей программы - O(f(n)), где n - количество элементов в АА-древе.
 
-    // Инициализация генератора случайных чисел
-    srand((unsigned int)time(NULL));
+Сравнивая времена выполнения для разного числа элементов, можно предположить, что сложность близка к линейной. Давайте рассмотрим отношения времен выполнения:
 
-    // Генерация и добавление случайных значений
-    for (int i = 0; i < values_count; i++) {
-        int random_value = rand() % (values_count * 10);
-        root = insert(root, random_value);
-    }
+- 61/31 ≈ 1.97
+- 99/61 ≈ 1.62
+- 142/99 ≈ 1.43
+- 227/142 ≈ 1.60
+- 273/227 ≈ 1.20
+- 319/273 ≈ 1.17
+- 354/319 ≈ 1.11
+- 403/354 ≈ 1.14
 
-    // Засекаем время перед выполнением операций
-    clock_t start_time = clock();
+Отношения времен близки к константам. Исходя из этого, можно предположить, что программа имеет линейную сложность O(n), где n - количество элементов в АА-древе.
 
-    printf("In-order traversal of the AA tree: ");
-    inOrder(root);
-    printf("\n");
-
-    printf("Number of nodes in the tree: %d\n", countNodes(root));
-
-    // Добавление случайного значения
-    int random_insert_value = rand() % (values_count * 10);
-    clock_t insert_start_time = clock();
-    if (!isNodePresent(root, random_insert_value)) {
-        root = insert(root, random_insert_value);
-        printf("Random element added: %d\n", random_insert_value);
-    } else {
-        printf("Element already exists.\n");
-    }
-    clock_t insert_end_time = clock();
-    double insert_elapsed_time = ((double)(insert_end_time - insert_start_time) * 1000) / CLOCKS_PER_SEC;
-    printf("Insert time: %.2f milliseconds\n", insert_elapsed_time);
-
-    // Удаление случайного значения
-    int random_delete_value = rand() % (values_count * 10);
-    clock_t delete_start_time = clock();
-    if (isNodePresent(root, random_delete_value)) {
-        root = deleteNode(root, random_delete_value);
-        printf("Random element deleted: %d\n", random_delete_value);
-    } else {
-        printf("Element not found.\n");
-    }
-    clock_t delete_end_time = clock();
-    double delete_elapsed_time = ((double)(delete_end_time - delete_start_time) * 1000) / CLOCKS_PER_SEC;
-    printf("Delete time: %.2f milliseconds\n", delete_elapsed_time);
-
-    // Поиск определенного значения
-    int search_value = 97;
-    clock_t search_start_time = clock();
-    SearchResult search_result = search(root, search_value, 1);
-    clock_t search_end_time = clock();
-    double search_elapsed_time = ((double)(search_end_time - search_start_time) * 1000) / CLOCKS_PER_SEC;
-
-    if (search_result.node) {
-        printf("Element with value %d found at level %d.\n", search_value, search_result.level);
-    } else {
-        printf("Element with value %d not found in the tree.\n", search_value);
-    }
-    printf("Search time: %.2f milliseconds\n", search_elapsed_time);
-
-    printf("In-order traversal after operations: ");
-    inOrder(root);
-    printf("\n");
-
-    printf("Number of nodes in the tree after operations: %d\n", countNodes(root));
-
-    // Засекаем время после выполнения операций
-    clock_t end_time = clock();
-    double elapsed_time = ((double)(end_time - start_time) * 1000) / CLOCKS_PER_SEC;
-
-    printf("Total elapsed time: %.2f milliseconds\n", elapsed_time);
-
-    return 0;
-}
+Однако, для более точного анализа и уверенности в результатах, стоит использовать более сложные методы анализа сложности, такие как профилирование кода или математический анализ.
